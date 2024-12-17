@@ -22,7 +22,7 @@ abstract class Dispatch
     protected string $path;
 
     /** @var array|null */
-    protected ?array $route = null;
+    protected array|null $route = null;
 
     /** @var array */
     protected array $routes;
@@ -31,19 +31,19 @@ abstract class Dispatch
     protected string $separator;
 
     /** @var string|null */
-    protected ?string $namespace = null;
+    protected string|null $namespace = null;
 
     /** @var string|null */
-    protected ?string $group = null;
+    protected string|null $group = null;
 
     /** @var array|null */
-    protected ?array $middleware = null;
+    protected array|null $middleware = null;
 
     /** @var array|null */
-    protected ?array $data = null;
+    protected array|null $data = null;
 
     /** @var int */
-    protected ?int $error = null;
+    protected int|null $error = null;
 
     /** @const int Bad Request */
     public const BAD_REQUEST = 400;
@@ -63,7 +63,7 @@ abstract class Dispatch
      * @param string $projectUrl
      * @param null|string $separator
      */
-    public function __construct(string $projectUrl, ?string $separator = ":")
+    public function __construct(string $projectUrl, string|null $separator = ":")
     {
         $this->projectUrl = (substr($projectUrl, "-1") == "/" ? substr($projectUrl, 0, -1) : $projectUrl);
         $this->path = rtrim((filter_input(INPUT_GET, "route", FILTER_DEFAULT) ?? "/"), "/");
@@ -84,7 +84,7 @@ abstract class Dispatch
      * @param array|null $data
      * @return string|null
      */
-    public function route(string $name, array $data = null): ?string
+    public function route(string $name, array|null $data = null): ?string
     {
         foreach ($this->routes as $http_verb) {
             foreach ($http_verb as $route_item) {
@@ -100,7 +100,7 @@ abstract class Dispatch
      * @param null|string $namespace
      * @return Dispatch
      */
-    public function namespace(?string $namespace): Dispatch
+    public function namespace(string|null $namespace): Dispatch
     {
         $this->namespace = ($namespace ? ucwords($namespace) : null);
         return $this;
@@ -110,7 +110,7 @@ abstract class Dispatch
      * @param null|string $group
      * @return Dispatch
      */
-    public function group(?string $group, array|string $middleware = null): Dispatch
+    public function group(string|null $group, array|string|null $middleware = null): Dispatch
     {
         $this->group = ($group ? trim($group, "/") : null);
         $this->middleware = $middleware ? [$this->group => $middleware] : null;
@@ -152,7 +152,7 @@ abstract class Dispatch
      * @param string $route
      * @param array|null $data
      */
-    public function redirect(string $route, array $data = null): void
+    public function redirect(string $route, array|null $data = null): void
     {
         if ($name = $this->route($route, $data)) {
             header("Location: {$name}");
